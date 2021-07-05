@@ -12,10 +12,11 @@ con.connect(function(err){
 	console.log("connected!");
 });
 
-var sql = "SELECT * FROM cpscps";
+var sql = "SELECT * FROM ";
 con.query(sql, function(err, rows, fields){
 	if(err){
 		console.log("query failed");
+		console.log(err);
 	} else{
 		console.log(rows.name);
 	}
