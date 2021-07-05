@@ -5,7 +5,7 @@ var con = mysql.createConnection({
 	port:	3306,
 	user:	'plc',
 	password: '1234',
-	database: 'mysql'
+	database: 'tmp_plc'
 });
 
 con.connect(function(err){
