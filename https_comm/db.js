@@ -4,8 +4,8 @@ const pool = maria.createPool({
 	//host:		'165.246.44.142:3306',
 	host:		'165.246.44.142',
 	port:		3306,
-	user:		'plc',
-	password:	'1234',
+	user:		'root',
+	password:	'13130132',
 	//database:	'tmp_plc'
 });
 

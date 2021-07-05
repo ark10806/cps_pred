@@ -1,0 +1,24 @@
+var mysql = require('mysql');
+
+var con = mysql.createConnection({
+	host:	'165.246.44.142',
+	port:	3306,
+	user:	'plc',
+	password: '1234'
+});
+
+con.connect(function(err){
+	if(err)throw err;
+	console.log("connected!");
+});
+
+var sql = "SELECT * FROM cpscps";
+con.query(sql, function(err, rows, fields){
+	if(err){
+		console.log("query failed");
+	} else{
+		console.log(rows.name);
+	}
+});
+
+con.end();
