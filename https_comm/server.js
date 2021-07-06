@@ -14,9 +14,10 @@ var httpsServer = https.createServer(cred, app);
 
 app.use(bodyParser.json())
 app.post('/', function(req,res){
-	var msg = req.body.my_msg;
-	console.log(msg);
-	exec_sql(msg);	
+	var temp = req.body.temp;
+	var press = req.body.press;
+	console.log(req.body);
+	exec_sql(temp, press);	
 
 	return res.json({success:true, msg:"good"});
 });

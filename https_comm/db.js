@@ -1,6 +1,6 @@
 var mysql = require('mysql');
 
-function exec_sql(temp){
+function exec_sql(temp, press){
 	var con = mysql.createConnection({
 		host:	'localhost',
 		user:	'root',
@@ -12,7 +12,9 @@ function exec_sql(temp){
 		console.log("connected!");
 	});
 	console.log("tmp: " + temp);
-	var sql = "SELECT * FROM node_test";
+	console.log("Date.now(): " + Date.now());
+	var sql = `INSERT INTO furnace1 values(${Date.now()}, ${temp}, ${press})`
+	//var sql = "SELECT * FROM node_test";
 	con.query(sql, function(err, rows, fields){
 		if(err){
 			console.log("query failed");

@@ -2,6 +2,7 @@ import socket as sock
 import requests
 import json
 import time
+from random import randint
 
 #plc
 HOST = '165.246.44.130'
@@ -18,8 +19,9 @@ with sock.socket(sock.AF_INET, sock.SOCK_STREAM) as clnt:
 	while True:
 		temp = clnt.recv(SIZE).decode()
 		print(f'from plt: {temp}')
+		press = randint(1,100);
 		
-		data = {'my_msg': f'{temp}'}
+		data = {'temp': f'{temp}', 'press': f'{press}'}
 		res = requests.post(url, data=json.dumps(data), headers=headers, verify=False)
 		print(res.status_code)
 		
