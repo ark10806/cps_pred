@@ -1,0 +1,3 @@
+sudo mysql -p mysql
+1234
+이상하게 연결이 된다 ㅅㅂ

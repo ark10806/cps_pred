@@ -19,7 +19,7 @@ with sock.socket(sock.AF_INET, sock.SOCK_STREAM) as clnt:
 		temp = clnt.recv(SIZE).decode()
 		print(f'from plt: {temp}')
 		
-		data = {'my_msg': f'temp: {temp}'}
+		data = {'my_msg': f'{temp}'}
 		res = requests.post(url, data=json.dumps(data), headers=headers, verify=False)
 		print(res.status_code)
 		

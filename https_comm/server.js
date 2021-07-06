@@ -1,3 +1,4 @@
+var exec_sql = require('./db');
 var express = require('express');
 var bodyParser = require('body-parser');
 var https = require('https')
@@ -15,9 +16,10 @@ app.use(bodyParser.json())
 app.post('/', function(req,res){
 	var msg = req.body.my_msg;
 	console.log(msg);
+	exec_sql(msg);	
+
 	return res.json({success:true, msg:"good"});
 });
-
 
 
 httpsServer.listen(PORT, function(){
