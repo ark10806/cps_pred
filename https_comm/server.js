@@ -22,6 +22,9 @@ app.post('/', function(req,res){
 	return res.json({success:true, msg:"good"});
 });
 
+app.post('/init', function(req,res){
+	
+
 
 httpsServer.listen(PORT, function(){
 	console.log('listening...');
