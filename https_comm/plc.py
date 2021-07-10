@@ -21,7 +21,8 @@ with sock.socket(sock.AF_INET, sock.SOCK_STREAM) as clnt:
 		print(f'from plt: {temp}')
 		press = randint(1,100);
 		
-		data = {'temp': f'{temp}', 'press': f'{press}'}
+		data = {'temps': [{'temp': 1}, {'temp': 2}, {'temp': 3}, {'temp': 4}, {'temp': 5}, {'temp': 6}] , 'press': f'{press}'}
 		res = requests.post(url, data=json.dumps(data), headers=headers, verify=False)
 		print(res.status_code)
+		time.sleep(1)
 		
