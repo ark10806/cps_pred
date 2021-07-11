@@ -1,8 +1,5 @@
-var exec_sql_init = require('./db');
-
-var Furnaces = ('./service');
-var PLC = require('./service');
-var Client = require('./service');
+const Furnaces = require('./service');
+//Client = require('./service');
 
 var express = require('express');
 var bodyParser = require('body-parser');
@@ -14,20 +11,33 @@ var cert = fs.readFileSync('/etc/ssl/certificate.crt', 'utf8');
 var cred = {key: key, cert: cert};
 var app = express();
 
-const PORT = 8081;
 
-Furnaces.init();
+
+const PORT = 8081;
+console.log("server Starts");
+//Furnaces.init();
 
 var httpsServer = https.createServer(cred, app);
 
 app.use(bodyParser.json())
 app.post('/', function(req,res){
+	Furnaces.init();
 	var temp = req.body.temp;
 	var press = req.body.press;
 	console.log(req.body);
-	exec_sql_init(temp, press);	
 
 	return res.json({success:true, msg:"good"});
+});
+
+app.post('/start', function(req,res){
+	const fur_ID = req.body.fur_ID;
+	const mat_ID = req.body.mat_ID;
+	const proc_ID = req.body.proc_ID;
+	const amount = req.body.amount;
+	const feedback = null;
+	const span = req.body.span;
+	Furnaces.start(fur_ID, mat_ID, proc_ID, amount, feedback, span);
+	return res.json({success:true, msg:"fur started"});
 });
 
 app.post('/insert', function(req,res){
@@ -36,28 +46,25 @@ app.post('/insert', function(req,res){
 		temps.push(parseInt(item.temp));
 	});
 	const fur_ID = req.body.fur_ID;
-	const temp = req.body.temp;
 	const press = req.body.press;
-	Furnaces.start(fur_ID, mat_ID, proc_ID, amount, feedback, span);
+	const flow = req.body.flow;
+	const is_closed = req.body.is_closed;
 	Furnaces.insert_values(fur_ID, temps, press, flow, is_closed);
+	return res.json({success:true, msg:"fur inserted"});
 
 });
 
 app.post('/init', function(req,res){
 	const fur_ID = req.body.fur_ID;
-	exec_sql_init(fur_ID);
 });
 
 app.post('/current', function(req,res){
 	const fur_ID = req.body.fur_ID;
-	exec_sql_curr(fur_ID);
 });
 
 app.post('/end_process', function(req,res){
 	const fur_ID = req.body.fur_ID;
-	exec_sql_terminate(fur_ID);
 });
-
 httpsServer.listen(PORT, function(){
 	console.log('listening...');
 });
