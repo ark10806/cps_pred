@@ -13,7 +13,7 @@ const exec_sql = async(sql)=>{
 		const conn = await pool.getConnection(async conn => conn);
 		try{
 			const rows = await conn.query(sql);
-			console.log(rows);
+			//console.log(rows);
 			//const [rows] = await conn.query(sql);
 			return rows;
 		} catch(err) {

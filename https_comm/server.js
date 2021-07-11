@@ -21,15 +21,13 @@ var httpsServer = https.createServer(cred, app);
 
 app.use(bodyParser.json())
 app.post('/', function(req,res){
-	Furnaces.init();
-	var temp = req.body.temp;
-	var press = req.body.press;
-	console.log(req.body);
+	Furnaces.init();	
 
 	return res.json({success:true, msg:"good"});
 });
 
 app.post('/start', function(req,res){
+	console.log('starting furnace');
 	const fur_ID = req.body.fur_ID;
 	const mat_ID = req.body.mat_ID;
 	const proc_ID = req.body.proc_ID;
