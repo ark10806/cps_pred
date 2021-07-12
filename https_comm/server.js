@@ -11,6 +11,10 @@ var cert = fs.readFileSync('/etc/ssl/certificate.crt', 'utf8');
 var cred = {key: key, cert: cert};
 var app = express();
 
+/*
+다수의 클라이언트를 활용할 경우 문제 발생!@!!!!!]1
+operation_cycle 동기화되지 않음.
+*/
 
 
 const PORT = 8081;

@@ -15,7 +15,7 @@ class Furnaces{
 	constructor(total_furnaces = 8){
 		this.operation_cycle = 0;
 		this.furnace_operNum = [];
-		for(var i=0; i<total_furnaces; i++)
+		for(var i=0; i<total_furnaces+1; i++)
 			this.furnace_operNum.push(-1); 		//async DB.operation No로부터 받아와.
 	}
 
@@ -44,13 +44,14 @@ class Furnaces{
 			});
 		});
 	}
+
 	async start(fur_ID, mat_ID, proc_ID, amount, feedback, span){
 		if(this.furnace_operNum[fur_ID] != -1){
 			console.log(`Furnace ${fur_ID} is already working`);
 			return;
 		}
 
-		const sql = `INSERT INTO process_archive VALUES(0, ${fur_ID}, ${mat_ID}, ${proc_ID}, ${amount}, ${feedback}, ${span})`;
+		const sql = `INSERT INTO process_archive VALUES(0, ${fur_ID}, ${mat_ID}, ${proc_ID}, ${amount}, ${span}, ${feedback})`;
 		exec_sql(sql).then((value) => {
 			console.log('INSERTION to process_archive completed!');
 		});
@@ -65,6 +66,7 @@ class Furnaces{
 			}
 		});
 	}
+
 	async insert_values(fur_ID, t, press, flow, is_closed){
 		if(this.furnace_operNum[fur_ID] == -1){
 			console.log(`Furnace ${fur_ID} is not working`);
@@ -77,11 +79,11 @@ class Furnaces{
 	}
 
 	async terminate(fur_ID){
-		sql = `DELETE FROM process_archive WHERE operation_No=${this.furnace_operNum[fur_ID]}`;
+		const sql = `DELETE FROM panel WHERE furnace_ID=${fur_ID}`;
 		exec_sql(sql).then((value) => {
 			this.furnace_operNum[fur_ID] = -1;
-			console.log(`Furnace ${fur_ID} terminated.`);  
-			console.log(`status is ${this.furnace_operNum[fur_ID]}`);
+			console.log(`%%Furnace ${fur_ID} terminated.`);  
+			console.log(`%%status is ${this.furnace_operNum[fur_ID]}`);
 		});
 	}
 }
