@@ -9,8 +9,9 @@ const pool = mysql.createPool({
 	
 const exec_sql = async(sql)=>{
 	console.log("sql start!");
+	var conn;
 	try{
-		const conn = await pool.getConnection(async conn => conn);
+		conn = await pool.getConnection(async conn => conn);
 		try{
 			const rows = await conn.query(sql);
 			//console.log(rows);
@@ -24,6 +25,8 @@ const exec_sql = async(sql)=>{
 	} catch(err) {
 		console.log("\tDB Connection Error");
 		return null;
+	} finally{
+		conn.release();
 	}
 }
 

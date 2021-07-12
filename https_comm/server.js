@@ -15,17 +15,18 @@ var app = express();
 
 const PORT = 8081;
 console.log("server Starts");
-//Furnaces.init();
+Furnaces.init();
 
 var httpsServer = https.createServer(cred, app);
 
 app.use(bodyParser.json())
+/*
 app.post('/', function(req,res){
 	Furnaces.init();	
 
 	return res.json({success:true, msg:"good"});
 });
-
+*/
 app.post('/start', function(req,res){
 	console.log('starting furnace');
 	const fur_ID = req.body.fur_ID;
@@ -49,7 +50,12 @@ app.post('/insert', function(req,res){
 	const is_closed = req.body.is_closed;
 	Furnaces.insert_values(fur_ID, temps, press, flow, is_closed);
 	return res.json({success:true, msg:"fur inserted"});
+});
 
+app.post('/terminate', function(req,res){
+	const fur_ID = req.body.fur_ID;
+	Furnaces.terminate(fur_ID);
+	return res.json({success:true, msg:`fur${fur_ID} terminated`});
 });
 
 app.post('/init', function(req,res){

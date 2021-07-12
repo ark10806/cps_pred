@@ -27,7 +27,7 @@ class Furnaces{
 			if(value[0] != '')
 				this.operation_cycle = value[0][0].operation_No;
 			else
-				this.operation_cycle = 0;
+				this.operation_cycle = 1;
 			//다른 Block 안에서의 this 사용은 문제가 될 수 있다. check!
 			console.log(`[${this.operation_cycle}]: operation cycle Completly loaded.`);
 		});
@@ -53,42 +53,30 @@ class Furnaces{
 		const sql = `INSERT INTO process_archive VALUES(0, ${fur_ID}, ${mat_ID}, ${proc_ID}, ${amount}, ${feedback}, ${span})`;
 		exec_sql(sql).then((value) => {
 			console.log('INSERTION to process_archive completed!');
-			const sql2 = `INSERT INTO panel VALUES(${fur_ID}, ${this.operation_cycle})`;
-			exec_sql(sql2).then((value) => {
-				try{
-					this.operation_cycle = this.operation_cycle + 1;
-					this.furnaceStatus[fur_ID] = this.operation_cycle;
-
-				}catch(err){
-					console.log(`++err: ${err}`);
-				}
-				console.log(`Ready to insert operation_cycle ${this.operation_cycle}`);
-				console.log(`Furnace start with operation_No [${this.operation_cycle}]`);
-			});
-
 		});
-		/*
 		const sql2 = `INSERT INTO panel VALUES(${fur_ID}, ${this.operation_cycle})`;
 		exec_sql(sql2).then((value) => {
-			this.furnaceStatus[fur_ID] = ++this.operation_cycle;
-			console.log(`Ready to insert operation_cycle ${this.operation_cycle}`);
-			console.log(`Furnace start with operation_No [${this.operation_cycle}]`);
+			console.log(`Furnace${fur_ID} start with operation_No [${this.operation_cycle}]`);
+			try{
+				this.operation_cycle = this.operation_cycle + 1;
+				this.furnace_operNum[fur_ID] = this.operation_cycle;
+			} catch(err){
+				console.log(err);
+			}
 		});
-		*/
 	}
 	async insert_values(fur_ID, t, press, flow, is_closed){
-		if(this.furnaceStatus[fur_ID] == -1){
+		if(this.furnace_operNum[fur_ID] == -1){
 			console.log(`Furnace ${fur_ID} is not working`);
 			return;
 		}
-		const sql = `INSERT INTO curr_fur${fur_ID} VALUES(0, ${timestamp.now()/1000}, ${t[0]}, ${t[1]}, ${t[2]}, ${t[3]}, ${t[4]}, ${t[5]}, ${press}, ${flow}, ${is_closed})`
+		const sql = `INSERT INTO curr_fur${fur_ID} VALUES(0, ${timestamp.now()}, ${t[0]}, ${t[1]}, ${t[2]}, ${t[3]}, ${t[4]}, ${t[5]}, ${press}, ${flow}, ${is_closed})`
 		exec_sql(sql).then((value) => {
 			console.log(`Furnace ${fur_ID} values inserted!`);
 		});
 	}
 
 	async terminate(fur_ID){
-		this.furnace_operNum[fur_ID] = -1;
 		sql = `DELETE FROM process_archive WHERE operation_No=${this.furnace_operNum[fur_ID]}`;
 		exec_sql(sql).then((value) => {
 			this.furnace_operNum[fur_ID] = -1;
