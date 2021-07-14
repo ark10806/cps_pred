@@ -37,8 +37,17 @@ app.get('/continues', async  function(req,res){
 	const value = await Furnaces.continues(fur_ID);
 	//return res.json({success:true, msg:'continuing'});
 	console.log(`\tfinal: ${value}`);
+	//client에 보낼 값 최적화 할 것.
 	return res.send(value);
 	//return res.json({success:true, values: value});
+});
+
+app.get('/current', async function(req,res){
+	console.log(`\t<CURRENT FURNACE${req.body.fur_ID}>`);
+	const fur_ID = req.body.fur_ID;
+	const value = await Furnaces.get_current(fur_ID);
+	console.log(`final: ${value}`);
+	return res.send(value);
 });
 
 app.post('/start', function(req,res){

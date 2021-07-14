@@ -20,6 +20,7 @@ class Furnaces{
 		for(var i=0; i<total_furnaces+1; i++)
 			this.furnace_operNum.push(-1); 		//async DB.operation No로부터 받아와.
 	}
+
 /*
 	async get_oper(){
 		// db.panel[0] 에서 최근 oepration_No를 가져옴.
@@ -57,7 +58,6 @@ class Furnaces{
 			return;
 
 		var sql = `SELECT * FROM curr_fur${fur_ID}`;
-		console.log(`\t\t${sql}`);
 		var value = await DB.exec_sql(sql);
 		
 		console.log(JSON.stringify(value[0]));
@@ -65,6 +65,19 @@ class Furnaces{
 
 		return JSON.stringify(value[0]);
 	}
+
+	async get_current(fur_ID){
+		if(this.furnace_operNum[fur_ID] == -1)
+			return;
+
+		var sql = `SELECT * FROM curr_fur${fur_ID} order by relative_time desc limit 1`;
+		var value = await DB.exec_sql(sql);
+
+		console.log(JSON.stringify(value[0]));
+
+		return JSON.stringify(value[0]);
+	}
+		
 
 	async start(fur_ID, mat_ID, proc_ID, amount, feedback, span){
 		if(this.furnace_operNum[fur_ID] != -1){

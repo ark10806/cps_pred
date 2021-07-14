@@ -88,8 +88,9 @@ while True:
 		if(panel[i]):
 			furs[i].insert()
 			if(randint(1,10) == 5):
-				furs[i].terminate()
-				panel[i] = 0
+				if(i != 2):
+					furs[i].terminate()
+					panel[i] = 0
 			time.sleep(0.1)
 	
 
