@@ -3,6 +3,9 @@ import requests
 import json
 import time
 from random import randint
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 HOST = '165.246.44.130'
 PORT = 1000
@@ -76,6 +79,7 @@ for i in range(tot_fur_num):
 	furs.append(Furnace(i, plc0))
 	if (panel[i]):
 		furs[i].start()
+		time.sleep(0.5)
 
 while True:
 	if sum(panel) == 0:
@@ -86,6 +90,7 @@ while True:
 			if(randint(1,10) == 5):
 				furs[i].terminate()
 				panel[i] = 0
+			time.sleep(0.1)
 	
 
 

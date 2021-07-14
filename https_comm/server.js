@@ -32,7 +32,7 @@ app.post('/', function(req,res){
 });
 */
 app.post('/start', function(req,res){
-	console.log('starting furnace');
+	console.log(`\t<STARTING FRUNACE${req.body.fur_ID}>`);
 	const fur_ID = req.body.fur_ID;
 	const mat_ID = req.body.mat_ID;
 	const proc_ID = req.body.proc_ID;
@@ -57,6 +57,7 @@ app.post('/insert', function(req,res){
 });
 
 app.post('/terminate', function(req,res){
+	console.log(`\t<TERMINATE FURNACE${req.body.fur_ID}>`);
 	const fur_ID = req.body.fur_ID;
 	Furnaces.terminate(fur_ID);
 	return res.json({success:true, msg:`fur${fur_ID} terminated`});

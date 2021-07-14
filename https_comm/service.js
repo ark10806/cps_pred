@@ -1,4 +1,6 @@
-const exec_sql = require('./db');
+//const exec_sql = require('./db');
+//const exec_sql_ins = require('./db');
+DB = require('./db');
 var timestamp = require('unix-timestamp');
 
 /*
@@ -18,30 +20,35 @@ class Furnaces{
 		for(var i=0; i<total_furnaces+1; i++)
 			this.furnace_operNum.push(-1); 		//async DB.operation No로부터 받아와.
 	}
+/*
+	async get_oper(){
+		// db.panel[0] 에서 최근 oepration_No를 가져옴.
+	}
 
+	aync set_oper(){
+		// 작업 시작 직후 db.panel[0]에  oeration_No를 최신화.
+	}
+*/
 	async init(){ 
 		console.log("Getting an operation cycle from DB..");
-		const sql = `SELECT operation_No FROM process_archive order by operation_No desc limit 1`;
-		exec_sql(sql).then((value) => {
-			console.log(`asdfasdfasdf-${value[0]}-`);
-			if(value[0] != '')
-				this.operation_cycle = value[0][0].operation_No;
-			else
-				this.operation_cycle = 1;
-			//다른 Block 안에서의 this 사용은 문제가 될 수 있다. check!
-			console.log(`[${this.operation_cycle}]: operation cycle Completly loaded.`);
-		});
+		var sql = `SELECT operation_No FROM process_archive order by operation_No desc limit 1`;
+		var value = await DB.exec_sql(sql);
+		console.log(`asdfasdfasdf-${value[0]}-`);
+		if(value[0] != '')
+			this.operation_cycle = value[0][0].operation_No;
+		else
+			this.operation_cycle = 1;
+		console.log(`[${this.operation_cycle}]: operation cycle Completly loaded.`);
 
-		const sql2 = "SELECT * FROM panel";
-		exec_sql(sql2).then((value) => {
-			console.log(`panel: ${value[0]}`);
-			value[0].forEach((item,idx)=>{
-				console.log(`\tpan: ${value[0][idx].furnace_ID}, ${value[0][idx].operation_No}`);
-				this.furnace_operNum[value[0][idx].furnace_ID] = value[0][idx].operation_No;
-			});
-			this.furnace_operNum.forEach((item, idx)=>{
-				console.log(`\tArr: ${item}`);
-			});
+		sql = "SELECT * FROM panel";
+		value = await DB.exec_sql(sql);
+		console.log(`panel: ${value[0]}`);
+		value[0].forEach((item,idx)=>{
+			console.log(`\tpan: ${value[0][idx].furnace_ID}, ${value[0][idx].operation_No}`);
+			this.furnace_operNum[value[0][idx].furnace_ID] = value[0][idx].operation_No;
+		});
+		this.furnace_operNum.forEach((item, idx)=>{
+			console.log(`\tArr${idx}: ${item}`);
 		});
 	}
 
@@ -51,21 +58,21 @@ class Furnaces{
 			return;
 		}
 
-		const sql = `INSERT INTO process_archive VALUES(0, ${fur_ID}, ${mat_ID}, ${proc_ID}, ${amount}, ${span}, ${feedback})`;
-		exec_sql(sql).then((value) => {
-			console.log('INSERTION to process_archive completed!');
-		});
-		const sql2 = `INSERT INTO panel VALUES(${fur_ID}, ${this.operation_cycle})`;
-		exec_sql(sql2).then((value) => {
-			console.log(`Furnace${fur_ID} start with operation_No [${this.operation_cycle}]`);
-			try{
-				this.operation_cycle = this.operation_cycle + 1;
-				this.furnace_operNum[fur_ID] = this.operation_cycle;
-			} catch(err){
-				console.log(err);
-			}
-		});
+		var sql = `INSERT INTO process_archive VALUES(0, ${fur_ID}, ${mat_ID}, ${proc_ID}, ${amount}, ${span}, ${feedback})`;
+		DB.exec_sql_ins(sql);
+		console.log('INSERTION to process_archive completed!');
+			
+		sql = `INSERT INTO panel VALUES(${fur_ID}, ${this.operation_cycle})`;
+		await DB.exec_sql(sql);
+		console.log(`Furnace${fur_ID} start with operation_No [${this.operation_cycle}]`);
+		try{
+			this.operation_cycle = this.operation_cycle + 1;
+			this.furnace_operNum[fur_ID] = this.operation_cycle;
+		} catch(err){
+			console.log(err);
+		}
 	}
+
 
 	async insert_values(fur_ID, t, press, flow, is_closed){
 		if(this.furnace_operNum[fur_ID] == -1){
@@ -73,18 +80,23 @@ class Furnaces{
 			return;
 		}
 		const sql = `INSERT INTO curr_fur${fur_ID} VALUES(0, ${timestamp.now()}, ${t[0]}, ${t[1]}, ${t[2]}, ${t[3]}, ${t[4]}, ${t[5]}, ${press}, ${flow}, ${is_closed})`
-		exec_sql(sql).then((value) => {
-			console.log(`Furnace ${fur_ID} values inserted!`);
-		});
+		//exec_sql_ins(sql);
+		DB.exec_sql_ins(sql);
+		console.log(`Furnace ${fur_ID} values inserted!`);
 	}
 
 	async terminate(fur_ID){
-		const sql = `DELETE FROM panel WHERE furnace_ID=${fur_ID}`;
-		exec_sql(sql).then((value) => {
-			this.furnace_operNum[fur_ID] = -1;
-			console.log(`%%Furnace ${fur_ID} terminated.`);  
-			console.log(`%%status is ${this.furnace_operNum[fur_ID]}`);
-		});
+		var sql = `INSERT INTO archive_fur${fur_ID} SELECT * FROM (SELECT operation_No from panel where furnace_ID=${fur_ID}) as P join curr_fur${fur_ID}`;
+		DB.exec_sql_ins(sql);
+		
+		sql = `TRUNCATE curr_fur${fur_ID}`;
+		DB.exec_sql_ins(sql);
+
+		sql = `DELETE FROM panel WHERE furnace_ID=${fur_ID}`;
+		DB.exec_sql_ins(sql);
+		this.furnace_operNum[fur_ID] = -1;
+		console.log(`%%Furnace ${fur_ID} terminated.`);  
+		console.log(`%%status is ${this.furnace_operNum[fur_ID]}`);
 	}
 }
 /*
