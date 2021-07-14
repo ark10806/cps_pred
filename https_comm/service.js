@@ -52,6 +52,20 @@ class Furnaces{
 		});
 	}
 
+	async continues(fur_ID){
+		if(this.furnace_operNum[fur_ID] == -1)
+			return;
+
+		var sql = `SELECT * FROM curr_fur${fur_ID}`;
+		console.log(`\t\t${sql}`);
+		var value = await DB.exec_sql(sql);
+		
+		console.log(JSON.stringify(value[0]));
+
+
+		return JSON.stringify(value[0]);
+	}
+
 	async start(fur_ID, mat_ID, proc_ID, amount, feedback, span){
 		if(this.furnace_operNum[fur_ID] != -1){
 			console.log(`Furnace ${fur_ID} is already working`);

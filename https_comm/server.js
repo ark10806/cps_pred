@@ -31,8 +31,18 @@ app.post('/', function(req,res){
 	return res.json({success:true, msg:"good"});
 });
 */
+app.get('/continues', async  function(req,res){
+	console.log(`\t<CONTINUE FURNACE${req.body.fur_ID}>`);
+	const fur_ID = req.body.fur_ID;
+	const value = await Furnaces.continues(fur_ID);
+	//return res.json({success:true, msg:'continuing'});
+	console.log(`\tfinal: ${value}`);
+	return res.send(value);
+	//return res.json({success:true, values: value});
+});
+
 app.post('/start', function(req,res){
-	console.log(`\t<STARTING FRUNACE${req.body.fur_ID}>`);
+	console.log(`\t<STARTING FURNACE${req.body.fur_ID}>`);
 	const fur_ID = req.body.fur_ID;
 	const mat_ID = req.body.mat_ID;
 	const proc_ID = req.body.proc_ID;

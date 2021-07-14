@@ -28,7 +28,7 @@ query = 'DROP TABLE IF EXISTS archive_fur%s'
 for i in range(total_furnace):
 	cur.execute(query, i+1)
 
-query = 'CREATE TABLE archive_fur%s(operation_No int not null PRIMARY KEY, relative_time int not null, timestamp int not null, temp1 int(4) not null, temp2 int(4) not null, temp3 int(4) not null, temp4 int(4) not null, temp5 int(4) not null, temp6 int(4) not null, press int(4) not null, flow int(4) not null, is_closed boolean not null)'
+query = 'CREATE TABLE archive_fur%s(operation_No int not null, relative_time int not null, timestamp int not null, temp1 int(4) not null, temp2 int(4) not null, temp3 int(4) not null, temp4 int(4) not null, temp5 int(4) not null, temp6 int(4) not null, press int(4) not null, flow int(4) not null, is_closed boolean not null, PRIMARY KEY(operation_No, relative_time))'
 for i in range(total_furnace):
 	cur.execute(query, i+1)
 

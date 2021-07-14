@@ -16,6 +16,7 @@ class DB{
 				const rows = await conn.query(sql);
 				return rows;
 			} catch(err) {
+				console.log(`\t////////////${sql}`);
 				console.log("\tQuery Error!");
 				console.log(err);
 				return null;
