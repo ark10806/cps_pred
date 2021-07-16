@@ -31,6 +31,13 @@ app.post('/', function(req,res){
 	return res.json({success:true, msg:"good"});
 });
 */
+app.get('/panel', async function(req, res){
+	const value = await Furnaces.get_panel();
+	console.log('PANEL STARTED\n\n');
+
+	return res.send(value);
+});
+
 app.get('/continues', async  function(req,res){
 	console.log(`\t<CONTINUE FURNACE${req.body.fur_ID}>`);
 	const fur_ID = req.body.fur_ID;
@@ -45,6 +52,9 @@ app.get('/continues', async  function(req,res){
 app.get('/current', async function(req,res){
 	console.log(`\t<CURRENT FURNACE${req.body.fur_ID}>`);
 	const fur_ID = req.body.fur_ID;
+	console.log('#############');
+	console.log(`CURRENT FUR IS ${req.body.fur_ID}`);
+	console.log('############');
 	const value = await Furnaces.get_current(fur_ID);
 	console.log(`final: ${value}`);
 	return res.send(value);

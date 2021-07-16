@@ -62,7 +62,7 @@ class Furnace:
 	def insert(self):
 		values = self.get_values()
 
-		req_json = {'fur_ID': self.fur_ID, 'temps': [{'temp': values[0]}, {'temp': values[1]}, {'temp': values[2]}, {'temp': values[3]}, {'temp': values[4]}, {'temp': values[5]}] , 'press': values[6], 'flow': values[7], 'is_closed': values[8]}
+		req_json = {'fur_ID': self.fur_ID, 'is_closed': values[8], 'temps': [{'temp': values[0]}, {'temp': values[1]}, {'temp': values[2]}, {'temp': values[3]}, {'temp': values[4]}, {'temp': values[5]}], 'flow': values[7], 'press': values[6]}
 		res = self.post('/insert', req_json)
 		print(f'insert_furnace: {res.status_code}')
 
@@ -87,10 +87,12 @@ while True:
 	for i in range(tot_fur_num):
 		if(panel[i]):
 			furs[i].insert()
+			'''
 			if(randint(1,10) == 5):
 				if(i != 2):
 					furs[i].terminate()
 					panel[i] = 0
+			'''
 			time.sleep(0.1)
 	
 

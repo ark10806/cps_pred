@@ -43,7 +43,7 @@ class Furnaces{
 
 		sql = "SELECT * FROM panel";
 		value = await DB.exec_sql(sql);
-		console.log(`panel: ${value[0]}`);
+		//console.log(`panel: ${value[0]}`);
 		value[0].forEach((item,idx)=>{
 			console.log(`\tpan: ${value[0][idx].furnace_ID}, ${value[0][idx].operation_No}`);
 			this.furnace_operNum[value[0][idx].furnace_ID] = value[0][idx].operation_No;
@@ -51,6 +51,13 @@ class Furnaces{
 		this.furnace_operNum.forEach((item, idx)=>{
 			console.log(`\tArr${idx}: ${item}`);
 		});
+	}
+
+	async get_panel(){
+		var result = JSON.stringify(this.furnace_operNum)
+		console.log(`######PANEL`);
+		console.log(result);
+		return JSON.stringify(this.furnace_operNum);
 	}
 
 	async continues(fur_ID){
@@ -106,7 +113,7 @@ class Furnaces{
 			console.log(`Furnace ${fur_ID} is not working`);
 			return;
 		}
-		const sql = `INSERT INTO curr_fur${fur_ID} VALUES(0, ${timestamp.now()}, ${t[0]}, ${t[1]}, ${t[2]}, ${t[3]}, ${t[4]}, ${t[5]}, ${press}, ${flow}, ${is_closed})`
+		const sql = `INSERT INTO curr_fur${fur_ID} VALUES(0, ${timestamp.now()}, ${is_closed}, ${t[0]}, ${t[1]}, ${t[2]}, ${t[3]}, ${t[4]}, ${t[5]}, ${flow}, ${press})`
 		//exec_sql_ins(sql);
 		DB.exec_sql_ins(sql);
 		console.log(`Furnace ${fur_ID} values inserted!`);
