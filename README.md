@@ -1,5 +1,3 @@
-# cps_pred
-
 # DB
 <img width="718" alt="image" src="https://user-images.githubusercontent.com/30382262/147380417-e089b275-7d85-410b-98d4-c10535ef1d34.png"></img>  
 - curr_furN 테이블이 plot(시간축에 따른 데이터)에 사용됨
